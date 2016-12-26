@@ -10,7 +10,7 @@ import base64
 import hashlib
 import os.path, mimetypes
 from .optionalmodules import PILOptionalModule, FFVideoOptionalModule
-
+from ffvideo import VideoStream
 logger = logging.getLogger(__name__)
 
 class Jid:
@@ -167,18 +167,14 @@ class MimeTools:
 class VideoTools:
     @staticmethod
     def getVideoProperties(videoFile):
-        with FFVideoOptionalModule() as imp:
-            VideoStream = imp("VideoStream")
-            s = VideoStream(videoFile)
-            return s.width, s.height, s.bitrate, s.duration #, s.codec_name
+        s = VideoStream(videoFile)
+        return s.width, s.height, s.bitrate, s.duration
 
     @staticmethod
     def generatePreviewFromVideo(videoFile):
-        with FFVideoOptionalModule() as imp:
-            VideoStream = imp("VideoStream")
-            fd, path = tempfile.mkstemp('.jpg')
-            stream = VideoStream(videoFile)
-            stream.get_frame_at_sec(0).image().save(path)
-            preview = ImageTools.generatePreviewFromImage(path)
-            os.remove(path)
-            return preview
+        fd, path = tempfile.mkstemp('.jpg')
+        stream = VideoStream(videoFile)
+        stream.get_frame_at_sec(0).image().save(path)
+        preview = ImageTools.generatePreviewFromImage(path)
+        os.remove(path)
+        return preview
