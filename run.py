@@ -14,7 +14,7 @@ from yowsup.layers.axolotl import YowAxolotlLayer
 from yowsup.env import YowsupEnv
 
 
-credentials = ("51971254149", "V2zTjG0t7Q76jMbmgWepU8scAO4=")
+CREDENTIALS = ("51971254149", "V2zTjG0t7Q76jMbmgWepU8scAO4=")
 
 if __name__==  "__main__":
     layers = (

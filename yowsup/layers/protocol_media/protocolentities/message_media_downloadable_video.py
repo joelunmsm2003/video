@@ -145,6 +145,10 @@ class VideoDownloadableMediaMessageProtocolEntity(DownloadableMediaMessageProtoc
         #duration = int(duration)
         #entity.setVideoProps('raw', width, height, duration=duration, seconds=duration, caption=caption)
         #return entity
+        
+        print 'to....',to
+        
+
         builder = VideoDownloadableMediaMessageProtocolEntity.getBuilder(to, path)
         builder.set("url", url)
         builder.set("ip", ip)

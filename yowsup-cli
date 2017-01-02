@@ -258,6 +258,13 @@ class DemosArgParser(YowArgParser):
         syncContacts = self.add_argument_group("Sync contacts")
         syncContacts.add_argument('-S','--sync', action = "store" , help = "Sync ( check valid ) whatsapp contacts",metavar =("contacts"))
 
+        sendOpts = self.add_argument_group("Send media file")
+        sendOpts.add_argument('-me', '--media', action="store", help="Send a media file to specified phone number, "
+                                                                 "wait for server receipt and exit (image, audio, video).",
+                          metavar=("phone", "path","mediatype"), nargs = 3)
+
+
+
     def process(self):
         super(DemosArgParser, self).process()
 
@@ -272,6 +279,8 @@ class DemosArgParser(YowArgParser):
             self.startSendClient()
         elif self.args["sync"]:
             self.startSyncContacts()
+        elif self.args["media"]:
+            self.startMediaClient()
         else:
             return False
         return True
@@ -335,6 +344,20 @@ class DemosArgParser(YowArgParser):
         try:
             self.printInfoText()
             stack = contacts.YowsupSyncStack(credentials,self.args["sync"].split(','), not self.args["unmoxie"])
+            stack.start()
+        except KeyboardInterrupt:
+            print("\nYowsdown")
+            sys.exit(0)
+
+    def startMediaClient(self):
+        from yowsup.demos import sendmedia
+        credentials = self._getCredentials()
+        if not credentials:
+            print("Error: You must specify a configuration method")
+            sys.exit(1)
+
+        try:
+            stack = sendmedia.sendmediafile(credentials, [([self.args["media"][0], self.args["media"][1], self.args["media"][2]])])
             stack.start()
         except KeyboardInterrupt:
             print("\nYowsdown")
